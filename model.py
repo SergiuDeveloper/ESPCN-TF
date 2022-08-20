@@ -37,6 +37,8 @@ class ESPCN:
         # @the best model weights
         self.model_path = model_path
 
+        self.model.summary()
+
     def load_checkpoint(self, ckpt_dir):
         self.ckpt_dir = ckpt_dir
         self.ckpt = tf.train.Checkpoint(step=tf.Variable(0),

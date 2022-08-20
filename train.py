@@ -1,3 +1,11 @@
+import importlib
+import utils
+import model
+import neuralnet
+importlib.reload(utils)
+importlib.reload(model)
+importlib.reload(neuralnet)
+
 from tensorflow.keras.losses import MeanSquaredError
 from tensorflow.keras.optimizers import Adam
 from utils.dataset import dataset
@@ -7,10 +15,10 @@ import argparse
 import os
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--steps",          type=int, default=100, help='-')
+parser.add_argument("--steps",          type=int, default=10000, help='-')
 parser.add_argument("--scale",          type=int, default=4,      help='-')
 parser.add_argument("--batch-size",     type=int, default=128,    help='-')
-parser.add_argument("--save-every",     type=int, default=20,    help='-')
+parser.add_argument("--save-every",     type=int, default=1000,    help='-')
 parser.add_argument("--save-best-only", type=int, default=0,      help='-')
 parser.add_argument("--save-log",       type=int, default=0,      help='-')
 parser.add_argument("--ckpt-dir",       type=str, default="",     help='-')
@@ -63,11 +71,11 @@ valid_set.load_data()
 
 def main():
     model = ESPCN(scale)
-    model.setup(optimizer=Adam(learning_rate=2e-4),
+    model.setup(optimizer=Adam(learning_rate=2e-5),
                 loss=MeanSquaredError(),
                 model_path=model_path,
                 metric=PSNR)
-
+    
     model.load_checkpoint(ckpt_dir)
     model.train(train_set, valid_set, steps=steps, batch_size=batch_size,
                 save_best_only=save_best_only, save_every=save_every,
