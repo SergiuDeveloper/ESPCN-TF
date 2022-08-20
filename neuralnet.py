@@ -58,7 +58,7 @@ def ESPCNx4():
                kernel_initializer=RandomNormal(mean=0, stddev=0.001), 
                padding='same')(X)
     X = Lambda(pixel_shuffle(scale=4))(X)
+    X = Conv2D(filters=3, kernel_size=3, padding='same', kernel_initializer=RandomNormal(mean=0, stddev=0.001))(X)
     X = X + X_interpolated
-    #X = Conv2D(filters=3, kernel_size=3, padding='same', kernel_initializer=RandomNormal(mean=0, stddev=0.001))(X)
     X_out = tf.clip_by_value(X, 0.0, 1.0)
     return Model(X_in, X_out, name="ESPCNx4")

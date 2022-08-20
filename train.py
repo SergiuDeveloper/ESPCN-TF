@@ -71,7 +71,7 @@ valid_set.load_data()
 
 def main():
     model = ESPCN(scale)
-    model.setup(optimizer=Adam(learning_rate=2e-5),
+    model.setup(optimizer=Adam(learning_rate=2e-4),
                 loss=MeanSquaredError(),
                 model_path=model_path,
                 metric=PSNR)
