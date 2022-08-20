@@ -129,6 +129,11 @@ def PSNR(y_true, y_pred, max_val=1):
     MSE = tf.reduce_mean(tf.square(y_true - y_pred))
     return 10 * tf.math.log(max_val * max_val / MSE) / tf.math.log(10.0)
 
+def SSIM(y_true, y_pred):
+    y_true = tf.expand_dims(y_true, axis=0)
+    y_pred = tf.expand_dims(y_pred, axis=0)
+    return tf.image.ssim(y_true, y_pred)
+
 def random_crop(image, h, w, c=3):
     crop = tf.image.random_crop(image, [h, w, c])
     return crop

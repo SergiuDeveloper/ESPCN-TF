@@ -1,8 +1,9 @@
 import os
 import neuralnet as nn
 import numpy as np
-from utils.common import exists
+from utils.common import exists, SSIM
 import tensorflow as tf
+from datetime import datetime
 
 class logger:
     def __init__(self, path, values) -> None:
@@ -53,7 +54,7 @@ class ESPCN:
         return sr
 
     def evaluate(self, dataset, batch_size=64):
-        losses, metrics = [], []
+        losses, metrics, ssims = [], [], []
         isEnd = False
         while isEnd == False:
             lr, hr, isEnd = dataset.get_batch(
@@ -61,13 +62,21 @@ class ESPCN:
             sr = self.predict(lr)
             losses.append(self.loss(hr, sr))
             metrics.append(self.metric(hr, sr))
+            ssim.append(SSIM(hr, sr))
+
 
         metric = tf.reduce_mean(metrics).numpy()
         loss = tf.reduce_mean(losses).numpy()
-        return loss, metric
+        ssim = tf.reduce_mean(ssims).numpy()
+        return loss, metric, ssim
 
     def train(self, train_set, valid_set, batch_size, steps, save_every=1,
               save_best_only=False, save_log=False, log_dir=None):
+
+        with open("logs/last.txt", "w"):
+            pass
+
+        train_start_time = datetime.now()
 
         if (save_log) and (log_dir is None):
             raise ValueError("log_dir must be specified if save_log is True")
@@ -92,6 +101,7 @@ class ESPCN:
 
         loss_buffer = []
         metric_buffer = []
+        ssim_buffer = []
         while cur_step < max_steps:
             cur_step += 1
             self.ckpt.step.assign_add(1)
@@ -101,14 +111,24 @@ class ESPCN:
             metric_buffer.append(metric)
 
             if (cur_step % save_every == 0) or (cur_step >= max_steps):
+                train_current_time = datetime.now()
+                
                 loss = tf.reduce_mean(loss_buffer).numpy()
                 metric = tf.reduce_mean(metric_buffer).numpy()
-                val_loss, val_metric = self.evaluate(valid_set)
+                ssim = tf.reduce_mean(ssim_buffer).buffer()
+                val_loss, val_metric, val_ssim = self.evaluate(valid_set)
+                elapsed_time = train_current_time - train_start_time
                 print(f"Step {cur_step}/{max_steps}",
                       f"- loss: {loss:.7f}",
                       f"- {self.metric.__name__}: {metric:.3f}",
+                      f"- SSIM: {ssim}",
                       f"- val_loss: {val_loss:.7f}",
-                      f"- val_{self.metric.__name__}: {val_metric:.3f}")
+                      f"- val_{self.metric.__name__}: {val_metric:.3f}",
+                      f"_ val_SSIM: {val_ssim}"
+                      f"- time: {elapsed_time}")
+
+                with open("logs/last.txt", "a") as logs_file:
+                    print(f"{loss} {metric} {ssim} {val_loss} {val_metric} {val_ssim} {elapsed_time}", file=logs_file)
 
                 if save_log == True:
                     dict_logger["loss"].values.append(loss)
@@ -118,6 +138,7 @@ class ESPCN:
 
                 loss_buffer = []
                 metric_buffer = []
+                ssim_buffer = []
                 self.ckpt_man.save(checkpoint_number=0)
 
                 if save_best_only and val_loss > prev_loss:
@@ -139,7 +160,8 @@ class ESPCN:
             sr = self.model(lr, training=True)
             loss = self.loss(hr, sr)
             metric = self.metric(hr, sr)
+            ssim = SSIM(hr, sr)
         gradient = tape.gradient(loss, self.model.trainable_variables)
         self.optimizer.apply_gradients(
             zip(gradient, self.model.trainable_variables))
-        return loss, metric
+        return loss, metric, ssim

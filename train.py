@@ -7,10 +7,10 @@ import argparse
 import os
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--steps",          type=int, default=100000, help='-')
-parser.add_argument("--scale",          type=int, default=2,      help='-')
+parser.add_argument("--steps",          type=int, default=100, help='-')
+parser.add_argument("--scale",          type=int, default=4,      help='-')
 parser.add_argument("--batch-size",     type=int, default=128,    help='-')
-parser.add_argument("--save-every",     type=int, default=100,    help='-')
+parser.add_argument("--save-every",     type=int, default=20,    help='-')
 parser.add_argument("--save-best-only", type=int, default=0,      help='-')
 parser.add_argument("--save-log",       type=int, default=0,      help='-')
 parser.add_argument("--ckpt-dir",       type=str, default="",     help='-')
