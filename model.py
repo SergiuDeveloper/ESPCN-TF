@@ -30,6 +30,9 @@ class ESPCN:
         self.ckpt_dir = None
         self.ckpt_man = None
 
+    def get_trainable_params(self):
+        return self.model.trainable_variables
+
     def setup(self, optimizer, loss, metric, model_path):
         self.optimizer = optimizer
         self.loss = loss
@@ -75,9 +78,6 @@ class ESPCN:
     def train(self, train_set, valid_set, batch_size, steps, save_every=1,
               save_best_only=False, save_log=False, log_dir=None):
 
-        with open("logs/last.txt", "w"):
-            pass
-
         train_start_time = datetime.now()
 
         if (save_log) and (log_dir is None):
@@ -100,6 +100,9 @@ class ESPCN:
             self.load_weights(self.model_path)
             prev_loss, _ = self.evaluate(valid_set)
             self.load_checkpoint(self.ckpt_dir)
+        else:
+            with open("logs/last.txt", "w"):
+                pass
 
         loss_buffer = []
         metric_buffer = []
