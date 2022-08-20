@@ -62,7 +62,7 @@ class ESPCN:
             sr = self.predict(lr)
             losses.append(self.loss(hr, sr))
             metrics.append(self.metric(hr, sr))
-            ssim.append(SSIM(hr, sr))
+            ssims.append(SSIM(hr, sr))
 
 
         metric = tf.reduce_mean(metrics).numpy()
