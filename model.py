@@ -106,9 +106,10 @@ class ESPCN:
             cur_step += 1
             self.ckpt.step.assign_add(1)
             lr, hr, _ = train_set.get_batch(batch_size)
-            loss, metric = self.train_step(lr, hr)
+            loss, metric, ssim = self.train_step(lr, hr)
             loss_buffer.append(loss)
             metric_buffer.append(metric)
+            ssim_buffer.append(ssim)
 
             if (cur_step % save_every == 0) or (cur_step >= max_steps):
                 train_current_time = datetime.now()
