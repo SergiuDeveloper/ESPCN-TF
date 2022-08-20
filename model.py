@@ -116,7 +116,7 @@ class ESPCN:
                 
                 loss = tf.reduce_mean(loss_buffer).numpy()
                 metric = tf.reduce_mean(metric_buffer).numpy()
-                ssim = tf.reduce_mean(ssim_buffer).buffer()
+                ssim = tf.reduce_mean(ssim_buffer).numpy()
                 val_loss, val_metric, val_ssim = self.evaluate(valid_set)
                 elapsed_time = train_current_time - train_start_time
                 print(f"Step {cur_step}/{max_steps}",
