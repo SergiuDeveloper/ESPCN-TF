@@ -1,5 +1,6 @@
 import tensorflow as tf
 import numpy as np
+from tensorflow.keras.losses import MSE
 import os
 
 def read_image(filepath):
@@ -124,10 +125,8 @@ def exists(path):
     return os.path.exists(path)
 
 def PSNR(y_true, y_pred, max_val=1):
-    y_true = tf.cast(y_true, tf.float32)
-    y_pred = tf.cast(y_pred, tf.float32)
-    MSE = tf.reduce_mean(tf.square(y_true - y_pred))
-    return 10 * tf.experimental.numpy.log10(max_val * max_val / MSE)
+    loss = tf.reduce_mean(MSE(hr_image, sr_image).numpy())
+    return 10 * tf.experimental.numpy.log10(max_val * max_val / loss)
 
 def SSIM(y_true, y_pred, max_val=1):
     y_true = tf.expand_dims(y_true, axis=0)
