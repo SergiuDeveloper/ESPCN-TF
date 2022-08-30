@@ -127,7 +127,7 @@ def PSNR(y_true, y_pred, max_val=1):
     y_true = tf.cast(y_true, tf.float32)
     y_pred = tf.cast(y_pred, tf.float32)
     MSE = tf.reduce_mean(tf.square(y_true - y_pred))
-    return 10 * tf.math.log(max_val * max_val / MSE) / tf.math.log(10.0)
+    return 10 * tf.experimental.numpy.log10(max_val * max_val / MSE)
 
 def SSIM(y_true, y_pred, max_val=1):
     y_true = tf.expand_dims(y_true, axis=0)
