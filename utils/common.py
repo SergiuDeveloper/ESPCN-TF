@@ -125,7 +125,7 @@ def exists(path):
     return os.path.exists(path)
 
 def PSNR(y_true, y_pred, max_val=1):
-    loss = tf.reduce_mean(MSE(y_true, y_pred).numpy())
+    loss = tf.reduce_mean(MSE(y_true, y_pred))
     return 10 * tf.experimental.numpy.log10(max_val * max_val / loss)
 
 def SSIM(y_true, y_pred, max_val=1):
