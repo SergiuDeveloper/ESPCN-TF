@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 from matplotlib import rcParams
 rcParams.update({'figure.autolayout': True})
+from math import log10
 import os
 
 
@@ -33,10 +34,10 @@ for file in os.listdir(INPUT_DIR):
                 loss, psnr, ssim, val_loss, val_psnr, val_ssim, _ = input_file_line.split()
 
                 model_data[model_name]['loss'].append(float(loss))
-                model_data[model_name]['psnr'].append(float(psnr))
+                model_data[model_name]['psnr'].append(10 * log10(1 / float(loss)))
                 model_data[model_name]['ssim'].append(float(ssim))
                 model_data[model_name]['val_loss'].append(float(val_loss))
-                model_data[model_name]['val_psnr'].append(float(val_psnr))
+                model_data[model_name]['val_psnr'].append(10 * log10(1 / float(val_loss)))
                 model_data[model_name]['val_ssim'].append(float(val_ssim))
 
 for metric in ['loss', 'psnr', 'ssim', 'val_loss', 'val_psnr', 'val_ssim']:
