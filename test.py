@@ -36,8 +36,8 @@ def main():
     model = ESPCN(scale)
     model.load_weights(ckpt_path)
 
-    ls_data = sorted_list(f"dataset/test/x{scale}/data")
-    ls_labels = sorted_list(f"dataset/test/x{scale}/labels")
+    ls_data = sorted_list("/kaggle/input/div2k-dataset/div2k_train_hr/DIV2K_train_HR")
+    ls_labels = sorted_list("/kaggle/input/div2k-dataset/DIV2K_valid_HR/DIV2K_valid_HR")
 
     sum_mse = 0
     sum_psnr = 0
