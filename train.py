@@ -15,7 +15,7 @@ import argparse
 import os
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--steps",          type=int, default=100000, help='-')
+parser.add_argument("--steps",          type=int, default=500000, help='-')
 parser.add_argument("--scale",          type=int, default=4,      help='-')
 parser.add_argument("--batch-size",     type=int, default=128,    help='-')
 parser.add_argument("--save-every",     type=int, default=1000,    help='-')
@@ -57,7 +57,7 @@ if scale == 3:
 elif scale == 4:
     hr_crop_size = 17 * 4
 
-train_set = dataset("/kaggle/input/dataset-div2k/DIV2K_train_HR/", "DIV2K_train_HR")
+train_set = dataset(dataset_dir, "train")
 train_set.generate(lr_crop_size, hr_crop_size)
 train_set.load_data()
 
