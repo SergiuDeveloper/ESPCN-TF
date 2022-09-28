@@ -57,7 +57,7 @@ if scale == 3:
 elif scale == 4:
     hr_crop_size = 17 * 4
 
-train_set = dataset("/kaggle/input/div2k-dataset/DIV2K_train_HR/", "DIV2K_train_HR")
+train_set = dataset("/kaggle/input/dataset-div2k/DIV2K_train_HR/", "DIV2K_train_HR")
 train_set.generate(lr_crop_size, hr_crop_size)
 train_set.load_data()
 
