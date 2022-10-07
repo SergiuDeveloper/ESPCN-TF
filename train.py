@@ -50,7 +50,7 @@ model_path = os.path.join(ckpt_dir, f"ESPCN-x{scale}.h5")
 # -----------------------------------------------------------
 
 dataset_dir = "dataset"
-lr_crop_size = 100
+lr_crop_size = 17
 hr_crop_size = lr_crop_size * scale
 
 train_set = dataset(dataset_dir, "train")
