@@ -32,17 +32,16 @@ class dataset:
 
             h = hr_image.shape[0]
             w = hr_image.shape[1]
-            for x in np.arange(start=0, stop=h-hr_crop_size, step=step):
-                for y in np.arange(start=0, stop=w-hr_crop_size, step=step):
-                    subim_label = hr_image[x : x + hr_crop_size, y : y + hr_crop_size]
-                    subim_data = gaussian_blur(subim_label, sigma=0.7)
-                    subim_data = resize_bicubic(subim_data, lr_crop_size, lr_crop_size)
 
-                    subim_data = norm01(subim_data)
-                    subim_label = norm01(subim_label)
+            subim_label = hr_image[int(h//2-hr_crop_size):int(h//2+hr_crop_size), int(w//2-hr_crop_size):int(w//2+hr_crop_size)]
+            subim_data = gaussian_blur(subim_label, sigma=0.7)
+            subim_data = resize_bicubic(subim_data, lr_crop_size, lr_crop_size)
+            
+            subim_label = norm01(subim_label)
+            subim_data = norm01(subim_data)
 
-                    data.append(subim_data.numpy())
-                    labels.append(subim_label.numpy())
+            data.append(subim_data.numpy())
+            data.append(subim_label.numpy())
 
         data = np.array(data)
         labels = np.array(labels)
