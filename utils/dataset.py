@@ -41,7 +41,7 @@ class dataset:
             subim_data = norm01(subim_data)
 
             data.append(subim_data.numpy())
-            data.append(subim_label.numpy())
+            labels.append(subim_label.numpy())
 
         data = np.array(data)
         labels = np.array(labels)
