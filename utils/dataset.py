@@ -33,7 +33,7 @@ class dataset:
             h = hr_image.shape[0]
             w = hr_image.shape[1]
 
-            subim_label = hr_image[int(h//2-hr_crop_size):int(h//2+hr_crop_size), int(w//2-hr_crop_size):int(w//2+hr_crop_size)]
+            subim_label = hr_image[int(h//2-hr_crop_size//2):int(h//2+hr_crop_size//2), int(w//2-hr_crop_size//2):int(w//2+hr_crop_size//2)]
             subim_data = gaussian_blur(subim_label, sigma=0.7)
             subim_data = resize_bicubic(subim_data, lr_crop_size, lr_crop_size)
             
