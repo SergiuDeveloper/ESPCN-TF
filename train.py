@@ -53,12 +53,14 @@ dataset_dir = "dataset"
 lr_crop_size = 17
 hr_crop_size = lr_crop_size * scale
 
+samples = 10
+
 train_set = dataset(dataset_dir, "train")
-train_set.generate(lr_crop_size, hr_crop_size)
+train_set.generate(lr_crop_size, hr_crop_size, samples)
 train_set.load_data()
 
 valid_set = dataset(dataset_dir, "valid")
-valid_set.generate(lr_crop_size, hr_crop_size)
+valid_set.generate(lr_crop_size, hr_crop_size, samples)
 valid_set.load_data()
 
 # -----------------------------------------------------------

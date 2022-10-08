@@ -2,6 +2,7 @@ from utils.common import *
 import tensorflow as tf
 import numpy as np
 import os
+import random
 
 class dataset:
     def __init__(self, dataset_dir, subset):
@@ -13,7 +14,7 @@ class dataset:
         self.labels_file = os.path.join(self.dataset_dir, f"labels_{self.subset}.npy")
         self.cur_idx = 0
     
-    def generate(self, lr_crop_size, hr_crop_size):      
+    def generate(self, lr_crop_size, hr_crop_size, samples):      
         if exists(self.data_file) and exists(self.labels_file):
             print(f"{self.data_file} and {self.labels_file} HAVE ALREADY EXISTED\n")
             return
@@ -33,15 +34,19 @@ class dataset:
             h = hr_image.shape[0]
             w = hr_image.shape[1]
 
-            subim_label = hr_image[int(h//2-hr_crop_size//2):int(h//2+hr_crop_size//2), int(w//2-hr_crop_size//2):int(w//2+hr_crop_size//2)]
-            subim_data = gaussian_blur(subim_label, sigma=0.7)
-            subim_data = resize_bicubic(subim_data, lr_crop_size, lr_crop_size)
-            
-            subim_label = norm01(subim_label)
-            subim_data = norm01(subim_data)
+            for i in range(samples):
+                starting_y = random.randint(0, h - hr_crop_size)
+                starting_x = random.randint(0, w - hr_crop_size)
 
-            data.append(subim_data.numpy())
-            labels.append(subim_label.numpy())
+                subim_label = hr_image[starting_y:starting_y+hr_crop_size, starting_x:starting_x+hr_crop_size]
+                subim_data = gaussian_blur(subim_label, sigma=0.7)
+                subim_data = resize_bicubic(subim_data, lr_crop_size, lr_crop_size)
+                
+                subim_label = norm01(subim_label)
+                subim_data = norm01(subim_data)
+
+                data.append(subim_data.numpy())
+                labels.append(subim_label.numpy())
 
         data = np.array(data)
         labels = np.array(labels)
