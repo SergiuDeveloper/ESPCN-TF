@@ -53,7 +53,7 @@ dataset_dir = "dataset"
 lr_crop_size = 17
 hr_crop_size = lr_crop_size * scale
 
-samples = 50
+samples = 150
 
 train_set = dataset(dataset_dir, "train")
 train_set.generate(lr_crop_size, hr_crop_size, samples)
