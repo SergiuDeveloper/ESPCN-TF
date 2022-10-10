@@ -5,14 +5,13 @@ import os
 import random
 
 class dataset:
-    def __init__(self, dataset_dir_data, dataset_dir_labels, subset):
+    def __init__(self, dataset_dir_data, dataset_dir_labels):
         self.dataset_dir_data = dataset_dir_data
         self.dataset_dir_labels = dataset_dir_labels
-        self.subset = subset
         self.data = tf.convert_to_tensor([])
         self.labels = tf.convert_to_tensor([])
-        self.data_file = os.path.join(self.dataset_dir_data, f"data_{self.subset}.npy")
-        self.labels_file = os.path.join(self.dataset_dir_labels, f"labels_{self.subset}.npy")
+        self.data_file = os.path.join(self.dataset_dir_data, f"data.npy")
+        self.labels_file = os.path.join(self.dataset_dir_labels, f"labels.npy")
         self.cur_idx = 0
     
     def generate(self, lr_crop_size, hr_crop_size, scale, samples):      
@@ -23,11 +22,8 @@ class dataset:
         labels = []
         step = hr_crop_size - 1
 
-        subset_dir_data = os.path.join(self.dataset_dir_data, self.subset)
-        subset_dir_labels = os.path.join(self.dataset_dir_labels, self.subset)
-
-        ls_data = sorted_list(subset_dir_data)
-        ls_labels = sorted_list(subset_dir_labels)
+        ls_data = sorted_list(self.dataset_dir_data)
+        ls_labels = sorted_list(self.dataset_dir_labels)
         
         for i in range(len(ls_data)):
             print(image_path)
