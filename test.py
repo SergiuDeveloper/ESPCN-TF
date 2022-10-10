@@ -41,6 +41,7 @@ def main():
     ls_labels = sorted_list("dataset/test/labels")
 
     patch_size = 17
+    samples = 50
 
     sum_mse = 0
     sum_psnr = 0
@@ -61,41 +62,42 @@ def main():
 
         lr_image = tf.expand_dims(lr_image, axis=0)
         
-        lr_starting_y = random.randint(0, lr_patch.shape[0] - patch_size)
-        lr_starting_x = random.randint(0, lr_patch.shape[1] - patch_size)
+        for _ in range(samples):
+            lr_starting_y = random.randint(0, lr_patch.shape[0] - patch_size)
+            lr_starting_x = random.randint(0, lr_patch.shape[1] - patch_size)
 
-        lr_patch = lr_image[lr_starting_y:lr_starting_y+patch_size, lr_starting_x:lr_starting_x+patch_size]
-        hr_patch = lr_image[lr_starting_y*scale:(lr_starting_y+patch_size)*scale, lr_starting_x*scale:(lr_starting_x+patch_size)*scale]
+            lr_patch = lr_image[lr_starting_y:lr_starting_y+patch_size, lr_starting_x:lr_starting_x+patch_size]
+            hr_patch = lr_image[lr_starting_y*scale:(lr_starting_y+patch_size)*scale, lr_starting_x*scale:(lr_starting_x+patch_size)*scale]
 
-        timestamp_before = datetime.now()
-        cpu_usage_before = None
-        gpu_usage_before = None
-        cpu_usage_after = None
-        gpu_usage_after = None
-        try:
-            gpu_usage_before = tf.config.experimental.get_memory_info("GPU:0")["current"]
-        except:
-            pass
-        try:
-            tf.config.experimental.reset_memory_stats("GPU:0")
-        except:
-            pass
+            timestamp_before = datetime.now()
+            cpu_usage_before = None
+            gpu_usage_before = None
+            cpu_usage_after = None
+            gpu_usage_after = None
+            try:
+                gpu_usage_before = tf.config.experimental.get_memory_info("GPU:0")["current"]
+            except:
+                pass
+            try:
+                tf.config.experimental.reset_memory_stats("GPU:0")
+            except:
+                pass
 
-        sr_patch = model.predict(lr_patch)[0]
+            sr_patch = model.predict(lr_patch)[0]
 
-        timestamp_after = datetime.now()
-        try:
-            gpu_usage_after = tf.config.experimental.get_memory_info("GPU:0")["peak"]
-        except:
-            pass
+            timestamp_after = datetime.now()
+            try:
+                gpu_usage_after = tf.config.experimental.get_memory_info("GPU:0")["peak"]
+            except:
+                pass
 
-        sum_mse += tf.reduce_mean(MSE(hr_patch, sr_patch).numpy())
-        sum_psnr += PSNR(hr_patch, sr_patch).numpy()
-        sum_ssim += SSIM(hr_patch, sr_patch).numpy()
-        sum_runtime += timestamp_after - timestamp_before
-        if gpu_usage_before is not None and gpu_usage_after is not None:
-            sum_gpu_usage += gpu_usage_after - gpu_usage_before
-            gpu_recordings += 1
+            sum_mse += tf.reduce_mean(MSE(hr_patch, sr_patch).numpy())
+            sum_psnr += PSNR(hr_patch, sr_patch).numpy()
+            sum_ssim += SSIM(hr_patch, sr_patch).numpy()
+            sum_runtime += timestamp_after - timestamp_before
+            if gpu_usage_before is not None and gpu_usage_after is not None:
+                sum_gpu_usage += gpu_usage_after - gpu_usage_before
+                gpu_recordings += 1
 
     trainable_params_count = np.sum([np.prod(v.get_shape().as_list()) for v in model.get_trainable_params()])
     print(f"Trainable Params: {trainable_params_count}")
