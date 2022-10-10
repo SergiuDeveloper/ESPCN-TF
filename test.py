@@ -92,7 +92,6 @@ def main():
                 pass
 
             sum_mse += tf.reduce_mean(MSE(hr_patch, sr_patch).numpy())
-            sum_psnr += PSNR(hr_patch, sr_patch).numpy()
             sum_ssim += SSIM(hr_patch, sr_patch).numpy()
             sum_runtime += timestamp_after - timestamp_before
             if gpu_usage_before is not None and gpu_usage_after is not None:
@@ -102,7 +101,7 @@ def main():
     trainable_params_count = np.sum([np.prod(v.get_shape().as_list()) for v in model.get_trainable_params()])
     print(f"Trainable Params: {trainable_params_count}")
     print(f"MSE: {sum_mse / len(ls_data) / samples}")
-    print(f"PSNR: {sum_psnr / len(ls_data) / samples}")
+    print(f"PSNR: {10 * tf.experimental.numpy.log10(1 / (sum_mse / len(ls_data) / samples)).numpy()}")
     print(f"SSIM: {sum_ssim / len(ls_data) / samples}")
     print(f"Runtime: {sum_runtime / len(ls_data) / samples}")
     if gpu_recordings > 0:
