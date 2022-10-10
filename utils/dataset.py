@@ -26,7 +26,6 @@ class dataset:
         ls_labels = sorted_list(self.dataset_dir_labels)
         
         for i in range(len(ls_data)):
-            print(image_path)
             hr_image = read_image(ls_data[i])
             hr_image = rgb2ycbcr(hr_image)
 
