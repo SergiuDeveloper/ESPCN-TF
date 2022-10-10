@@ -29,7 +29,7 @@ class dataset:
             hr_image = read_image(ls_data[i])
             hr_image = rgb2ycbcr(hr_image)
 
-            lr_image = read_image(ls_labels)
+            lr_image = read_image(ls_labels[i])
             lr_image = rgb2ycbcr(lr_image)
             # *Y chanel - shape = [h, w, 1]
             # hr_image = hr_image[:, :, 0, tf.newaxis]
