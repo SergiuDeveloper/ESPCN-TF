@@ -3,6 +3,7 @@ import utils
 import model
 import neuralnet
 importlib.reload(utils)
+importlib.reload(utils.dataset)
 importlib.reload(model)
 importlib.reload(neuralnet)
 
@@ -55,11 +56,11 @@ hr_crop_size = lr_crop_size * scale
 
 samples = 50
 
-train_set = dataset(dataset_dir, "train/data", "train/labels")
+train_set = dataset(dataset_dir + '/train/data', dataset_dir + '/train/labels')
 train_set.generate(lr_crop_size, hr_crop_size, scale, samples)
 train_set.load_data()
 
-valid_set = dataset(dataset_dir, "valid/data", "valid/labels")
+valid_set = dataset(dataset_dir + '/valid/data', dataset_dir + '/valid/labels')
 valid_set.generate(lr_crop_size, hr_crop_size, scale, samples)
 valid_set.load_data()
 
