@@ -5,8 +5,9 @@ import os
 import random
 
 class dataset:
-    def __init__(self, dataset_dir, subset):
-        self.dataset_dir = dataset_dir
+    def __init__(self, dataset_dir_data, dataset_dir_labels, subset):
+        self.dataset_dir_data = dataset_dir_data
+        self.dataset_dir_labels = dataset_dir_labels
         self.subset = subset
         self.data = tf.convert_to_tensor([])
         self.labels = tf.convert_to_tensor([])
@@ -14,7 +15,7 @@ class dataset:
         self.labels_file = os.path.join(self.dataset_dir, f"labels_{self.subset}.npy")
         self.cur_idx = 0
     
-    def generate(self, lr_crop_size, hr_crop_size, samples):      
+    def generate(self, lr_crop_size, hr_crop_size, scale, samples):      
         if exists(self.data_file) and exists(self.labels_file):
             print(f"{self.data_file} and {self.labels_file} HAVE ALREADY EXISTED\n")
             return
@@ -22,12 +23,19 @@ class dataset:
         labels = []
         step = hr_crop_size - 1
 
-        subset_dir = os.path.join(self.dataset_dir, self.subset)
-        ls_images = sorted_list(subset_dir)
-        for image_path in ls_images:
+        subset_dir_data = os.path.join(self.dataset_dir_data, self.subset)
+        subset_dir_labels = os.path.join(self.dataset_dir_labels, self.subset)
+
+        ls_data = sorted_list(subset_dir_data)
+        ls_labels = sorted_list(subset_dir_labels)
+        
+        for i in range(len(ls_data)):
             print(image_path)
-            hr_image = read_image(image_path)
+            hr_image = read_image(ls_data[i])
             hr_image = rgb2ycbcr(hr_image)
+
+            lr_image = read_image(ls_labels)
+            lr_image = rgb2ycbcr(lr_image)
             # *Y chanel - shape = [h, w, 1]
             # hr_image = hr_image[:, :, 0, tf.newaxis]
 
@@ -35,12 +43,12 @@ class dataset:
             w = hr_image.shape[1]
 
             for i in range(samples):
-                starting_y = random.randint(0, h - hr_crop_size)
-                starting_x = random.randint(0, w - hr_crop_size)
+                starting_y = random.randint(0, h - lr_crop_size)
+                starting_x = random.randint(0, w - lr_crop_size)
 
-                subim_label = hr_image[starting_y:starting_y+hr_crop_size, starting_x:starting_x+hr_crop_size]
-                subim_data = gaussian_blur(subim_label, sigma=0.7)
-                subim_data = resize_bicubic(subim_data, lr_crop_size, lr_crop_size)
+                subim_label = hr_image[starting_y*scale:(starting_y+lr_crop_size)*scale, starting_x*scale:(starting_x+lr_crop_size)*scale]
+                subim_data = gaussian_blur(lr_image, sigma=0.2)
+                subim_data = hr_image[starting_y:starting_y+lr_crop_size, starting_x:starting_x+lr_crop_size]
                 
                 subim_label = norm01(subim_label)
                 subim_data = norm01(subim_data)
