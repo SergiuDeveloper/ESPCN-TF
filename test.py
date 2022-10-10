@@ -63,11 +63,11 @@ def main():
         lr_image = tf.expand_dims(lr_image, axis=0)
         
         for _ in range(samples):
-            lr_starting_y = random.randint(0, lr_patch.shape[0] - patch_size)
-            lr_starting_x = random.randint(0, lr_patch.shape[1] - patch_size)
+            lr_starting_y = random.randint(0, lr_image.shape[1] - patch_size)
+            lr_starting_x = random.randint(0, lr_image.shape[2] - patch_size)
 
-            lr_patch = lr_image[lr_starting_y:lr_starting_y+patch_size, lr_starting_x:lr_starting_x+patch_size]
-            hr_patch = lr_image[lr_starting_y*scale:(lr_starting_y+patch_size)*scale, lr_starting_x*scale:(lr_starting_x+patch_size)*scale]
+            lr_patch = np.array([lr_image[0, lr_starting_y:lr_starting_y+patch_size, lr_starting_x:lr_starting_x+patch_size]])
+            hr_patch = hr_image[lr_starting_y*scale:(lr_starting_y+patch_size)*scale, lr_starting_x*scale:(lr_starting_x+patch_size)*scale]
 
             timestamp_before = datetime.now()
             cpu_usage_before = None
@@ -101,10 +101,10 @@ def main():
 
     trainable_params_count = np.sum([np.prod(v.get_shape().as_list()) for v in model.get_trainable_params()])
     print(f"Trainable Params: {trainable_params_count}")
-    print(f"MSE: {sum_mse / len(ls_data)}")
-    print(f"PSNR: {sum_psnr / len(ls_data)}")
-    print(f"SSIM: {sum_ssim / len(ls_data)}")
-    print(f"Runtime: {sum_runtime / len(ls_data)}")
+    print(f"MSE: {sum_mse / len(ls_data) / samples}")
+    print(f"PSNR: {sum_psnr / len(ls_data) / samples}")
+    print(f"SSIM: {sum_ssim / len(ls_data) / samples}")
+    print(f"Runtime: {sum_runtime / len(ls_data) / samples}")
     if gpu_recordings > 0:
         print(f"GPU Usage: {sum_gpu_usage / gpu_recordings} bytes")
 
