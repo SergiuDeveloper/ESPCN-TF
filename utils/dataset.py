@@ -27,10 +27,10 @@ class dataset:
         
         for i in range(len(ls_data)):
             print(i)
-            hr_image = read_image(ls_data[i])
+            hr_image = read_image(ls_labels[i])
             hr_image = rgb2ycbcr(hr_image)
 
-            lr_image = read_image(ls_labels[i])
+            lr_image = read_image(ls_data[i])
             lr_image = rgb2ycbcr(lr_image)
             # *Y chanel - shape = [h, w, 1]
             # hr_image = hr_image[:, :, 0, tf.newaxis]
@@ -43,8 +43,8 @@ class dataset:
                 starting_x = random.randint(0, w - lr_crop_size)
 
                 subim_label = hr_image[starting_y*scale:(starting_y+lr_crop_size)*scale, starting_x*scale:(starting_x+lr_crop_size)*scale]
-                subim_data = gaussian_blur(lr_image, sigma=0.2)
-                subim_data = hr_image[starting_y:starting_y+lr_crop_size, starting_x:starting_x+lr_crop_size]
+                subim_data = lr_image[starting_y:starting_y+lr_crop_size, starting_x:starting_x+lr_crop_size]
+                subim_data = gaussian_blur(subim_data, sigma=0.2)
                 
                 subim_label = norm01(subim_label)
                 subim_data = norm01(subim_data)
