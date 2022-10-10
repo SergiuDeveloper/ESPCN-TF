@@ -11,8 +11,8 @@ class dataset:
         self.subset = subset
         self.data = tf.convert_to_tensor([])
         self.labels = tf.convert_to_tensor([])
-        self.data_file = os.path.join(self.dataset_dir, f"data_{self.subset}.npy")
-        self.labels_file = os.path.join(self.dataset_dir, f"labels_{self.subset}.npy")
+        self.data_file = os.path.join(self.dataset_dir_data, f"data_{self.subset}.npy")
+        self.labels_file = os.path.join(self.dataset_dir_labels, f"labels_{self.subset}.npy")
         self.cur_idx = 0
     
     def generate(self, lr_crop_size, hr_crop_size, scale, samples):      
