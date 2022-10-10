@@ -32,15 +32,10 @@ class dataset:
 
             lr_image = read_image(ls_data[i])
             lr_image = rgb2ycbcr(lr_image)
-            # *Y chanel - shape = [h, w, 1]
-            # hr_image = hr_image[:, :, 0, tf.newaxis]
-
-            h = hr_image.shape[0]
-            w = hr_image.shape[1]
 
             for i in range(samples):
-                starting_y = random.randint(0, h - lr_crop_size)
-                starting_x = random.randint(0, w - lr_crop_size)
+                starting_y = random.randint(0, lr_image.shape[0] - lr_crop_size)
+                starting_x = random.randint(0, lr_image.shape[1] - lr_crop_size)
 
                 subim_label = hr_image[starting_y*scale:(starting_y+lr_crop_size)*scale, starting_x*scale:(starting_x+lr_crop_size)*scale]
                 subim_data = lr_image[starting_y:starting_y+lr_crop_size, starting_x:starting_x+lr_crop_size]
