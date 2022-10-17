@@ -54,7 +54,7 @@ def ESPCNx4():
                padding='same', activation='tanh')(X)
     X = Conv2D(filters=48, kernel_size=3, 
                kernel_initializer=RandomNormal(mean=0, stddev=0.001), 
-               padding='same', activation='sigmoid')(X)
+               padding='same', activation='tanh')(X)
     X = Lambda(pixel_shuffle(scale=4))(X)
     
     X_out = tf.clip_by_value(X, 0.0, 1.0)
