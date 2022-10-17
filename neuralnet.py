@@ -46,10 +46,10 @@ def ESPCNx3():
 def ESPCNx4():
     X_in = Input(shape=(None, None, 3))
 
-    X = Conv2D(filters=128, kernel_size=5, 
+    X = Conv2D(filters=64, kernel_size=5, 
                kernel_initializer=RandomNormal(mean=0, stddev=0.001), 
                padding='same', activation='tanh')(X_in)
-    X = Conv2D(filters=64, kernel_size=3, 
+    X = Conv2D(filters=32, kernel_size=3, 
                kernel_initializer=RandomNormal(mean=0, stddev=0.001), 
                padding='same', activation='tanh')(X)
     X = Conv2D(filters=48, kernel_size=3, 
