@@ -46,16 +46,31 @@ def ESPCNx3():
 def ESPCNx4():
     X_in = Input(shape=(None, None, 3))
 
-    X = Conv2D(filters=80, kernel_size=5, 
+    X = Conv2D(filters=200, kernel_size=5, 
                kernel_initializer=RandomNormal(mean=0, stddev=0.001), 
                padding='same', activation='tanh')(X_in)
-    X = Conv2D(filters=64, kernel_size=5, 
+    X = Conv2D(filters=180, kernel_size=5, 
+               kernel_initializer=RandomNormal(mean=0, stddev=0.001), 
+               padding='same', activation='tanh')(X)
+    X = Conv2D(filters=160, kernel_size=5, 
+               kernel_initializer=RandomNormal(mean=0, stddev=0.001), 
+               padding='same', activation='tanh')(X)
+    X = Conv2D(filters=140, kernel_size=5, 
+               kernel_initializer=RandomNormal(mean=0, stddev=0.001), 
+               padding='same', activation='tanh')(X)
+    X = Conv2D(filters=120, kernel_size=5, 
+               kernel_initializer=RandomNormal(mean=0, stddev=0.001), 
+               padding='same', activation='tanh')(X)
+    X = Conv2D(filters=100, kernel_size=3, 
+               kernel_initializer=RandomNormal(mean=0, stddev=0.001), 
+               padding='same', activation='tanh')(X)
+    X = Conv2D(filters=80, kernel_size=3, 
+               kernel_initializer=RandomNormal(mean=0, stddev=0.001), 
+               padding='same', activation='tanh')(X)
+    X = Conv2D(filters=64, kernel_size=3, 
                kernel_initializer=RandomNormal(mean=0, stddev=0.001), 
                padding='same', activation='tanh')(X)
     X = Conv2D(filters=32, kernel_size=3, 
-               kernel_initializer=RandomNormal(mean=0, stddev=0.001), 
-               padding='same', activation='tanh')(X)
-    X = Conv2D(filters=16, kernel_size=3, 
                kernel_initializer=RandomNormal(mean=0, stddev=0.001), 
                padding='same', activation='tanh')(X)
     X = Conv2D(filters=48, kernel_size=3, 
