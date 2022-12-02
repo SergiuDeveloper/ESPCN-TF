@@ -40,7 +40,7 @@ def main():
     ls_data = sorted_list("dataset/test/data")
     ls_labels = sorted_list("dataset/test/labels")
 
-    patch_size = 17
+    patch_size = 100
     samples = 50
 
     sum_mse = 0
